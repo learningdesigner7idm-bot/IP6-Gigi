@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pindah Gigi: Adaptive Challenge v3</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FFDE59;
+            --primary: #5271FF;
+            --secondary: #FF5757;
+            --accent: #CB6CE6;
+            --dark: #000000;
+            --white: #ffffff;
+            --success: #00BF63;
+            --cyan: #A5F3FC;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(var(--dark) 1px, transparent 1px);
+            background-size: 25px 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--dark);
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        /* Container Utama */
+        #game-container {
+            width: 100%;
+            max-width: 450px;
+            height: 92vh;
+            background: var(--white);
+            border: 4px solid var(--dark);
+            border-radius: 35px;
+            position: relative;
+            box-shadow: 12px 12px 0px var(--dark);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: popUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popUp {
+            from { transform: scale(0.9) translateY(30px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .active { display: flex; }
+
+        /* Start Screen Scrollable */
+        #screen-start {
+            padding: 30px;
+            overflow-y: auto;
+            justify-content: center;
+        }
+
+        h1 { font-weight: 800; font-size: 2.2rem; text-transform: uppercase; line-height: 0.9; margin-bottom: 10px; letter-spacing: -1px; }
+        .tagline { 
+            background: var(--accent); color: white; display: inline-block; padding: 6px 12px; 
+            font-weight: 800; transform: rotate(-2deg); margin-bottom: 25px; border: 3px solid #000;
+            box-shadow: 4px 4px 0px #000; width: fit-content;
+        }
+
+        /* Form Styling */
+        .input-group { margin-bottom: 12px; width: 100%; }
+        label { display: block; font-weight: 800; margin-bottom: 5px; font-size: 0.75rem; text-transform: uppercase; }
+        input {
+            width: 100%; padding: 12px; border: 3px solid var(--dark); border-radius: 12px;
+            font-weight: 700; outline: none; box-shadow: 4px 4px 0px #eee; transition: 0.2s;
+        }
+        input:focus { transform: translate(2px, 2px); box-shadow: 1px 1px 0px var(--dark); border-color: var(--primary); }
+
+        /* Button Styling */
+        .btn-main {
+            padding: 15px; background: var(--primary); color: white; border: 4px solid var(--dark);
+            border-radius: 15px; font-weight: 800; font-size: 1.1rem; cursor: pointer;
+            box-shadow: 6px 6px 0px var(--dark); transition: all 0.1s; text-transform: uppercase;
+            margin-top: 10px; flex-shrink: 0;
+        }
+        .btn-main:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0px var(--dark); }
+
+        /* Game Header */
+        .game-header {
+            padding: 15px 20px; border-bottom: 4px solid var(--dark);
+            display: flex; justify-content: space-between; align-items: center; background: #fff;
+            flex-shrink: 0;
+        }
+        .status-pill {
+            background: var(--white); border: 2.5px solid var(--dark); padding: 5px 10px;
+            border-radius: 20px; font-weight: 800; font-size: 0.75rem; box-shadow: 2px 2px 0px var(--dark);
+        }
+
+        /* Game Stage (Character & Dialog) */
+        .game-body {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+            background: var(--cyan);
+            position: relative;
+        }
+
+        .stage-visual {
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 10px;
+            min-height: 180px;
+            background-image: radial-gradient(rgba(255,255,255,0.3) 1px, transparent 1px);
+            background-size: 15px 15px;
+        }
+
+        .dialog-container {
+            width: 90%;
+            background: white;
+            border: 3px solid var(--dark);
+            border-radius: 18px;
+            padding: 15px;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+            margin-bottom: 10px;
+        }
+
+        /* Choices Area */
+        .choice-section {
+            flex: 1;
+            background: white;
+            border-top: 4px solid var(--dark);
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .choice-btn {
+            background: white; border: 3px solid var(--dark); padding: 12px;
+            border-radius: 12px; font-weight: 700; font-size: 0.85rem; cursor: pointer;
+            text-align: left; box-shadow: 3px 3px 0px var(--dark); transition: 0.2s;
+        }
+        .choice-btn:hover { background: var(--cyan); transform: translateX(3px); }
+
+        /* Feedback Overlay */
+        #feedback-overlay {
+            position: absolute; inset: 0; background: rgba(255,255,255,0.98);
+            z-index: 100; display: none; flex-direction: column; justify-content: center;
+            padding: 30px; text-align: center;
+        }
+
+        /* Ribbons/Pita */
+        .pita {
+            position: absolute; width: 12px; height: 35px; border-radius: 4px;
+            z-index: 200; pointer-events: none;
+        }
+        @keyframes drift {
+            0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .summary-box {
+            margin-top: 15px; text-align: left; background: #f4f4f4; padding: 12px;
+            border-radius: 15px; font-size: 0.8rem; border: 3px solid var(--dark);
+            max-height: 250px; overflow-y: auto;
+        }
+
+        /* Misc */
+        .shake { animation: shake 0.3s ease-in-out; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <!-- LAYAR START -->
+    <div id="screen-start" class="screen active">
+        <h1>PINDAH<br><span style="color:var(--primary)">GIGI</span></h1>
+        <div class="tagline">Interactive Training</div>
+        
+        <div class="input-group">
+            <label>NAMA LENGKAP</label>
+            <input type="text" id="inp-name" placeholder="Siapa nama kamu?">
+        </div>
+        <div class="input-group">
+            <label>NIK</label>
+            <input type="text" id="inp-nik" placeholder="Contoh: 88921">
+        </div>
+        <div class="input-group">
+            <label>UNIT BISNIS</label>
+            <input type="text" id="inp-unit" placeholder="Divisi/Departemen">
+        </div>
+
+        <button class="btn-main" onclick="initGame()">Mulai Game 🚀</button>
+        <p style="font-size: 0.65rem; text-align: center; margin-top: 15px; font-weight: 700; color: #888;">Audio akan aktif setelah klik Mulai.</p>
+    </div>
+
+    <!-- LAYAR GAME -->
+    <div id="screen-game" class="screen">
+        <div class="game-header">
+            <div class="status-pill" id="display-name">PLAYER</div>
+            <div style="display:flex; gap:6px;">
+                <div class="status-pill" id="level-counter" style="background:var(--accent); color:white;">1/5</div>
+                <div class="status-pill" style="color:var(--secondary); min-width: 105px;" id="lives-display">Kesempatan: 3 ❤️</div>
+            </div>
+        </div>
+
+        <div class="game-body">
+            <div class="stage-visual">
+                <svg width="150" height="150" viewBox="0 0 200 200">
+                    <circle cx="100" cy="75" r="50" fill="#FFADAD" stroke="#000" stroke-width="5"/>
+                    <path id="char-mouth" d="M80 105 Q100 105 120 105" stroke="#000" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <rect x="65" y="140" width="70" height="60" rx="12" fill="#000"/>
+                    <g id="char-eyes">
+                        <circle id="eye-l" cx="85" cy="72" r="6" fill="#000"/>
+                        <circle id="eye-r" cx="115" cy="72" r="6" fill="#000"/>
+                    </g>
+                    <path id="brow-l" d="M75 58 L90 58" stroke="#000" stroke-width="3" fill="none"/>
+                    <path id="brow-r" d="M110 58 L125 58" stroke="#000" stroke-width="3" fill="none"/>
+                </svg>
+                
+                <div class="dialog-container">
+                    <b id="char-label" style="font-size: 0.7rem; color: var(--primary); text-transform: uppercase;">REKAN:</b>
+                    <p id="question-text" style="font-weight: 800; font-size: 0.85rem; margin-top:3px; line-height: 1.3;"></p>
+                </div>
+            </div>
+
+            <div class="choice-section" id="choice-options">
+                <!-- Pilihan Jawaban -->
+            </div>
+        </div>
+
+        <div id="feedback-overlay">
+            <h2 id="feedback-title" style="font-size: 1.8rem; margin-bottom: 5px;">BENAR!</h2>
+            <p id="feedback-msg" style="font-weight: 800; color: var(--primary);"></p>
+            <div id="hint-box" style="margin: 15px 0; font-size: 0.8rem; font-weight: 600; color: #555; background: #f0f0f0; padding: 12px; border-radius: 12px;"></div>
+            <button class="btn-main" onclick="nextQuestion()">Lanjut →</button>
+        </div>
+    </div>
+
+    <!-- LAYAR AKHIR -->
+    <div id="screen-end" class="screen" style="padding:30px; justify-content: center;">
+        <h1 id="end-title">RESULT</h1>
+        <p id="end-subtitle" style="font-weight: 700; font-size: 0.9rem; line-height: 1.4; margin-bottom: 10px;"></p>
+        <div id="reasoning-summary" class="summary-box" style="display:none;"></div>
+        <button class="btn-main" onclick="location.reload()">Main Lagi 🔄</button>
+    </div>
+</div>
+
+<!-- Audio -->
+<audio id="sfx-bgm" loop src="https://assets.mixkit.co/music/preview/mixkit-funny-game-over-3042.mp3"></audio>
+<audio id="sfx-correct" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
+<audio id="sfx-wrong" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+<audio id="sfx-win" src="https://assets.mixkit.co/sfx/preview/mixkit-clapping-male-crowd-439.mp3"></audio>
+
+<script>
+    const questions = [
+        {
+            char: "Manager Galak",
+            text: "Saya ngga mau tahu prosesnya, pokoknya ini kok angkanya beda?! Saya butuh ini fix sekarang!",
+            options: [
+                { text: "Data mentahnya sudah saya validasi, estimasi selesai jam 10 pagi ini. Ada format khusus yang Bapak butuhkan?", correct: true, tactic: "Speak the Currency", hint: "Fokus pada kepastian waktu & format (Gaya Currency)." },
+                { text: "Waduh Pak, data dari tim lapangan memang telat masuknya.", correct: false, tactic: "Defensif", hint: "Jangan menyalahkan pihak lain saat lawan bicara panik." },
+                { text: "Sabar Pak, nanti juga selesai kok.", correct: false, tactic: "Invalidasi", hint: "Menyuruh orang sabar justru menambah emosi." }
+            ],
+            reason: "Taktik: Speak the Currency. Manager yang agresif butuh hasil konkrit (angka/waktu), bukan alasan teknis."
+        },
+        {
+            char: "Rekan Senior",
+            text: "Kamu anak baru jangan sok tahu ya, metode saya sudah dipakai 10 tahun di sini.",
+            options: [
+                { text: "Metode lama Bapak sudah tidak relevan dengan teknologi cloud sekarang.", correct: false, tactic: "Konfrontasi", hint: "Menyerang ego senior akan menutup pintu diskusi." },
+                { text: "Saya mengerti pengalaman Bapak sangat berharga. Boleh saya tunjukkan data risiko di sistem baru agar kita bisa mitigasi bersama?", correct: true, tactic: "Pause & Read", hint: "Tahan ego, validasi pengalamannya, lalu tanya data." },
+                { text: "Ya sudah, kalau Bapak maunya begitu saya ikut saja.", correct: false, tactic: "Pasif", hint: "Sikap pasif tidak membantu inovasi tim." }
+            ],
+            reason: "Taktik: Pause & Read. Validasi pengalamannya untuk menurunkan resistensi sebelum masuk ke data teknis."
+        },
+        {
+            char: "Rekan Pasif-Agresif",
+            text: "Lama banget ya progresnya, padahal cuma ginian doang. Tapi ya sudahlah.",
+            options: [
+                { text: "Maksudnya 'cuma ginian' apa ya? Anda ngga tahu susahnya?", correct: false, tactic: "Baper", hint: "Terpancing sindiran hanya menghabiskan energi Anda." },
+                { text: "Sepertinya Anda ada masukan efisiensi. Boleh share draf versinya jam 2 siang ini agar saya pelajari?", correct: true, tactic: "Match the Pace", hint: "Hadapi sindiran dengan profesionalisme dingin & fokus target." },
+                { text: "Maaf ya kalau saya lambat kerjanya.", correct: false, tactic: "Rendah Diri", hint: "Minta maaf tanpa kesalahan jelas menurunkan wibawa profesional." }
+            ],
+            reason: "Taktik: Match the Pace. Hadapi sindiran dengan gaya yang 'straight to the point' dan hilangkan basa-basi."
+        },
+        {
+            char: "Klien Resisten",
+            text: "Pokoknya saya ngga setuju! Saya ngga mau denger penjelasan apa-apa lagi!",
+            options: [
+                { text: "Sepertinya kita butuh waktu lebih untuk me-review ini. Bagaimana kalau saya kirimkan draf-nya dulu via email untuk Bapak pelajari?", correct: true, tactic: "Safety Net (Time Out)", hint: "Berikan ruang jeda saat komunikasi macet total." },
+                { text: "Tapi Pak, ini penting sekali buat bisnis Bapak.", correct: false, tactic: "Memaksa", hint: "Memaksa orang yang menutup diri akan sia-sia." },
+                { text: "Ya sudah kalau Bapak ngga mau denger, saya tidak tanggung jawab.", correct: false, tactic: "Agresif", hint: "Memutus hubungan secara kasar merusak reputasi Anda." }
+            ],
+            reason: "Taktik: Safety Net. Gunakan Time Out (jeda waktu) untuk mendinginkan suasana saat lawan bicara menutup diri."
+        },
+        {
+            char: "Rekan Burnout",
+            text: "Capek saya, semua kerjaan dilempar ke saya terus! Kalian enak bisa santai!",
+            options: [
+                { text: "Saya mengerti volume kerjaan memang tinggi. Mari kita list mana prioritas untuk diselesaikan hari ini bersama.", correct: true, tactic: "Match the Pace", hint: "Validasi beban kerjanya dan tawarkan struktur prioritas." },
+                { text: "Sabar ya, namanya juga kerja, saya juga sibuk kok.", correct: false, tactic: "Adu Nasib", hint: "Jangan membandingkan penderitaan saat rekan sedang lelah." },
+                { text: "Jangan baper gitu dong, bawa enjoy saja.", correct: false, tactic: "Toxic Positivity", hint: "Ini meremehkan perasaan rekan yang sedang burnout." }
+            ],
+            reason: "Taktik: Match the Pace. Orang lelah butuh validasi beban kerja (Match tempo emosinya) bukan ceramah motivasi."
+        }
+    ];
+
+    let currentIdx = 0;
+    let lives = 3;
+    let playerData = { name: "", nik: "", unit: "" };
+    let audioStarted = false;
+
+    function initGame() {
+        playerData.name = document.getElementById('inp-name').value;
+        playerData.nik = document.getElementById('inp-nik').value;
+        playerData.unit = document.getElementById('inp-unit').value;
+
+        if(!playerData.name || !playerData.nik) {
+            alert("Isi nama dan NIK dulu ya!");
+            return;
+        }
+
+        if(!audioStarted) {
+            document.getElementById('sfx-bgm').play();
+            audioStarted = true;
+        }
+
+        document.getElementById('display-name').innerText = playerData.name.split(' ')[0].toUpperCase();
+        showScreen('screen-game');
+        loadQuestion();
+    }
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function setCharVisual(state) {
+        const mouth = document.getElementById('char-mouth');
+        const eyeL = document.getElementById('eye-l');
+        const eyeR = document.getElementById('eye-r');
+        const browL = document.getElementById('brow-l');
+        const browR = document.getElementById('brow-r');
+
+        if (state === 'happy') {
+            mouth.setAttribute('d', 'M80 100 Q100 120 120 100');
+            eyeL.setAttribute('r', '6'); eyeR.setAttribute('r', '6');
+            browL.setAttribute('d', 'M75 55 L90 52'); browR.setAttribute('d', 'M110 52 L125 55');
+        } else if (state === 'sad') {
+            mouth.setAttribute('d', 'M80 115 Q100 100 120 115');
+            eyeL.setAttribute('r', '4'); eyeR.setAttribute('r', '4');
+            browL.setAttribute('d', 'M75 52 L90 60'); browR.setAttribute('d', 'M110 60 L125 52');
+        } else {
+            mouth.setAttribute('d', 'M80 105 Q100 105 120 105');
+            eyeL.setAttribute('r', '6'); eyeR.setAttribute('r', '6');
+            browL.setAttribute('d', 'M75 58 L90 58'); browR.setAttribute('d', 'M110 58 L125 58');
+        }
+    }
+
+    function loadQuestion() {
+        const q = questions[currentIdx];
+        setCharVisual('neutral');
+        document.getElementById('level-counter').innerText = `${currentIdx + 1}/5`;
+        document.getElementById('char-label').innerText = q.char.toUpperCase() + ":";
+        document.getElementById('question-text').innerText = q.text;
+        
+        const optionsBox = document.getElementById('choice-options');
+        optionsBox.innerHTML = '';
+        
+        q.options.forEach((opt) => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.innerText = opt.text;
+            btn.onclick = () => handleAnswer(opt);
+            optionsBox.appendChild(btn);
+        });
+    }
+
+    function handleAnswer(opt) {
+        const overlay = document.getElementById('feedback-overlay');
+        const title = document.getElementById('feedback-title');
+        const msg = document.getElementById('feedback-msg');
+        const hint = document.getElementById('hint-box');
+        const container = document.getElementById('game-container');
+
+        overlay.style.display = 'flex';
+
+        if(opt.correct) {
+            document.getElementById('sfx-correct').play();
+            setCharVisual('happy');
+            title.innerText = "GG! GIGI TEPAT";
+            title.style.color = "var(--success)";
+            msg.innerText = `Taktik: ${opt.tactic}`;
+            hint.innerText = opt.hint;
+        } else {
+            document.getElementById('sfx-wrong').play();
+            setCharVisual('sad');
+            container.classList.add('shake');
+            setTimeout(() => container.classList.remove('shake'), 300);
+            
+            lives--;
+            document.getElementById('lives-display').innerText = `Kesempatan: ${lives} ❤️`;
+            title.innerText = "SLIP! GIGI SALAH";
+            title.style.color = "var(--secondary)";
+            msg.innerText = `Risiko: ${opt.tactic}`;
+            hint.innerText = opt.hint;
+        }
+    }
+
+    function nextQuestion() {
+        document.getElementById('feedback-overlay').style.display = 'none';
+        
+        if(lives <= 0) {
+            endGame(false);
+            return;
+        }
+
+        currentIdx++;
+        if(currentIdx >= questions.length) {
+            endGame(true);
+        } else {
+            loadQuestion();
+        }
+    }
+
+    function spawnRibbons() {
+        const colors = ['#5271FF', '#FF5757', '#CB6CE6', '#00BF63'];
+        for(let i=0; i<40; i++) {
+            const p = document.createElement('div');
+            p.className = 'pita';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            const duration = 2 + Math.random() * 2;
+            p.style.animation = `drift ${duration}s linear forwards`;
+            document.body.appendChild(p);
+            setTimeout(() => p.remove(), duration * 1000);
+        }
+    }
+
+    function endGame(isWin) {
+        showScreen('screen-end');
+        const title = document.getElementById('end-title');
+        const sub = document.getElementById('end-subtitle');
+        const reasoning = document.getElementById('reasoning-summary');
+
+        if(isWin) {
+            document.getElementById('sfx-win').play();
+            title.innerText = "MISI BERHASIL! 🎉";
+            title.style.color = "var(--success)";
+            sub.innerHTML = `Selamat <b>${playerData.name}</b>!<br>Kamu berhasil menguasai taktik komunikasi adaptif.<br><br><span style="font-size:1.2rem; color:var(--primary); background:var(--cyan); padding:8px; border:3px solid #000; display:inline-block; margin-top:10px;">KAMU SIAP UNTUK POST-TEST!</span>`;
+            spawnRibbons();
+        } else {
+            title.innerText = "GAME OVER";
+            title.style.color = "var(--secondary)";
+            sub.innerText = "Pelajari kembali taktik pindah gigi di bawah ini untuk meningkatkan refleksmu:";
+            reasoning.style.display = 'block';
+            reasoning.innerHTML = questions.map((q, i) => `
+                <div style="margin-bottom:12px; border-bottom:1.5px solid #ccc; padding-bottom:5px;">
+                    <b style="color:var(--primary)">Kasus ${i+1}:</b> <i>"${q.text}"</i><br>
+                    <span style="color:var(--success); font-weight:700;">✅ ${q.reason}</span>
+                </div>
+            `).join('');
+        }
+    }
+</script>
+
+</body>
+</html>
