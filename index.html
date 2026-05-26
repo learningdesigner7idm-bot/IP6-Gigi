@@ -3,538 +3,882 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platinum Pulse: Adaptability Mastery</title>
+    <title>Sync & Solve: The Platinum Protocol</title>
+    <!-- Tailwind CSS for rapid modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary: #6366f1;
-            --secondary: #f43f5e;
-            --accent: #fbbf24;
-            --dark: #0f172a;
+            --primary-bg: #0f172a; /* Slate 900 */
+            --glass-bg: rgba(30, 41, 59, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
         }
 
         body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--dark);
-            color: white;
-            overflow-x: hidden;
-            margin: 0;
-            padding: 0;
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .card-container {
-            perspective: 1500px;
-            width: 100%;
-            max-width: 360px;
-            height: 320px;
-            margin: 20px auto;
-        }
-
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-        }
-
-        .card-inner.is-flipped {
-            transform: rotateY(180deg);
-        }
-
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            border-radius: 32px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        .card-front {
-            background: linear-gradient(145deg, #1e1b4b, #312e81);
-            border: 4px solid #f43f5e;
-        }
-
-        .card-back {
-            background: linear-gradient(145deg, #064e3b, #065f46);
-            transform: rotateY(180deg);
-            border: 4px solid #10b981;
-        }
-
-        .btn-genz {
-            transition: all 0.2s;
-            box-shadow: 6px 6px 0px #000;
-            border: 2px solid #000;
-        }
-
-        .btn-genz:active {
-            transform: translate(3px, 3px);
-            box-shadow: 0px 0px 0px #000;
-        }
-
-        .btn-option {
-            background: rgba(255,255,255,0.05);
-            border: 2px solid rgba(255,255,255,0.1);
-            transition: all 0.2s;
-        }
-
-        .btn-option:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: var(--accent);
-            transform: translateX(5px);
-        }
-
-        .scroll-container {
-            height: 100vh;
-            overflow-y: auto;
-            scroll-behavior: smooth;
-            padding-bottom: 80px;
-        }
-
-        .pattern-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.1;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
             background-image: 
-                radial-gradient(#fff 1px, transparent 1px),
-                linear-gradient(45deg, transparent 48%, #fff 50%, transparent 52%);
-            background-size: 30px 30px, 60px 60px;
+                radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #f8fafc;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .floating-shape {
-            position: fixed;
-            z-index: -2;
-            filter: blur(60px);
-            border-radius: 50%;
-            opacity: 0.4;
-            animation: drift 15s infinite alternate ease-in-out;
+        h1, h2, h3, .brand-font {
+            font-family: 'Outfit', sans-serif;
         }
 
-        @keyframes drift {
-            from { transform: translate(-20%, -20%) scale(1); }
-            to { transform: translate(50%, 50%) scale(1.2); }
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
         }
 
-        .progress-bar {
-            height: 12px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 6px;
-            overflow: hidden;
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.4); } 50% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.8); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        
+        .animate-fade { animation: fadeIn 0.5s ease-out forwards; }
+        .animate-shake { animation: shake 0.3s ease-in-out; }
+        
+        .hidden-screen { display: none !important; }
+
+        /* Block Sequencing Styles */
+        .word-block {
+            background: rgba(51, 65, 85, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+            font-weight: 500;
+        }
+        
+        .word-block:hover {
+            background: rgba(71, 85, 105, 0.9);
+            transform: translateY(-2px);
+            border-color: var(--accent-cyan);
+        }
+        
+        .word-block:active { transform: translateY(1px); }
+        
+        .word-block.selected {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px dashed rgba(148, 163, 184, 0.5);
+            color: transparent;
+            pointer-events: none;
+            box-shadow: none;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #f43f5e, #fbbf24);
-            width: 0%;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        .answer-slot {
+            background: linear-gradient(145deg, var(--accent-cyan), var(--accent-purple));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: fadeIn 0.2s ease-out;
         }
+
+        /* Tension Meter */
+        .tension-bar { transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); }
+        ::-webkit-scrollbar-thumb { background: rgba(71, 85, 105, 0.8); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
     </style>
 </head>
-<body>
+<body class="flex flex-col items-center p-4 sm:p-6 lg:p-8">
 
-    <div class="pattern-overlay"></div>
-    <div class="floating-shape bg-indigo-600 w-96 h-96 top-0 left-0"></div>
-    <div class="floating-shape bg-pink-600 w-80 h-80 bottom-0 right-0" style="animation-delay: -5s"></div>
+    <!-- Global Audio Controls -->
+    <button id="btn-audio" class="fixed top-4 right-4 z-50 glass-panel p-3 rounded-full hover:bg-slate-700 transition" title="Toggle Audio">
+        <svg id="icon-audio-on" class="w-6 h-6 text-cyan-400 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5 10v4a2 2 0 002 2h2l4 4V4L9 8H7a2 2 0 00-2 2z"></path></svg>
+        <svg id="icon-audio-off" class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h2.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path></svg>
+    </button>
 
-    <!-- Audio Elements Updated for Gen Z Vibe -->
-    <audio id="bgMusic" loop>
-        <source src="https://assets.mixkit.co/music/preview/mixkit-tech-house-vibe-130.mp3" type="audio/mpeg">
-    </audio>
-    <audio id="sfxFlip"><source src="https://assets.mixkit.co/sfx/preview/mixkit-quick-jump-down-2114.mp3" type="audio/mpeg"></audio>
-    <audio id="sfxClick"><source src="https://assets.mixkit.co/sfx/preview/mixkit-button-click-small-2787.mp3" type="audio/mpeg"></audio>
-    <audio id="sfxSuccess"><source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg"></audio>
-    <audio id="sfxWrong"><source src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" type="audio/mpeg"></audio>
-
-    <div id="game-container" class="scroll-container px-6 py-8">
-        
-        <!-- SCREEN 1: LOGIN -->
-        <div id="screen-login" class="flex flex-col items-center justify-center min-h-screen text-center">
-            <div class="mb-10">
-                <div class="bg-yellow-400 text-black px-6 py-1 rounded-full text-xs font-black mb-4 inline-block transform -rotate-2 uppercase tracking-widest">The Platinum Rule</div>
-                <h1 class="text-6xl font-extrabold mb-4 tracking-tighter leading-none">PLATINUM<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-pink-500">PULSE</span></h1>
-                <p class="opacity-80 max-w-xs mx-auto text-sm">Adaptability Mission: Pilih respon "Courtesy Heads-Up" yang paling sinkron dengan tempo lawan bicara.</p>
+    <!-- SCREEN 1: THE GATEWAY -->
+    <section id="screen-gateway" class="w-full max-w-md animate-fade my-auto pt-10 pb-20">
+        <div class="glass-panel p-8 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500 rounded-full opacity-20 blur-3xl"></div>
+            
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-extrabold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Sync & Solve</h1>
+                <p class="text-sm tracking-widest text-slate-300 uppercase">The Platinum Protocol</p>
             </div>
 
-            <div class="glass p-8 rounded-[40px] w-full max-w-sm border-t-4 border-yellow-400">
-                <div class="space-y-5 mb-8 text-left">
-                    <div>
-                        <label class="block text-[10px] font-black uppercase tracking-[0.2em] mb-2 text-yellow-400">Identity Name</label>
-                        <input type="text" id="inputName" placeholder="Nama lengkap..." class="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-400 transition placeholder:opacity-30 text-white">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] font-black uppercase tracking-[0.2em] mb-2 text-yellow-400">Employee NIK</label>
-                        <input type="text" id="inputNIK" placeholder="NIK kamu..." class="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:border-yellow-400 transition placeholder:opacity-30 text-white">
-                    </div>
+            <form id="form-login" class="space-y-5 relative z-10">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Nama Lengkap</label>
+                    <input type="text" id="input-name" required class="w-full bg-slate-900/50 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition" placeholder="Masukkan nama...">
                 </div>
-                <button onclick="toMission()" class="w-full bg-white text-black hover:bg-yellow-400 py-5 rounded-2xl font-black text-xl btn-genz tracking-tight">ENTER MISSION</button>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase mb-2">NIK</label>
+                    <input type="text" id="input-nik" required class="w-full bg-slate-900/50 border border-slate-600 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-400 focus:ring-1 focus:ring-purple-400 transition" placeholder="Masukkan NIK...">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-lg rounded-xl px-6 py-4 mt-4 shadow-lg transition-transform transform active:scale-95">
+                    Akses Sistem
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- SCREEN 2: MISSION BRIEFING -->
+    <section id="screen-briefing" class="w-full max-w-2xl hidden-screen animate-fade my-auto pt-10 pb-20">
+        <div class="glass-panel p-6 sm:p-8">
+            <h2 class="text-3xl font-bold text-cyan-400 mb-6 flex items-center gap-3">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                Mission Briefing
+            </h2>
+            
+            <div class="space-y-6 text-slate-300 leading-relaxed text-sm sm:text-base">
+                <p>Selamat datang, <span id="display-name" class="font-bold text-white bg-slate-800 px-2 py-1 rounded"></span>. Anda ditugaskan sebagai <strong>Operation Resolver</strong>.</p>
+                
+                <div class="p-4 border-l-4 border-purple-500 bg-purple-900/20 rounded-r-lg">
+                    <h3 class="font-bold text-purple-300 mb-2">The Hook (WHY):</h3>
+                    <p>Seringkali masalah kerja membesar bukan karena masalah teknisnya, tapi karena <em>cara kita merespons</em>. Di sinilah <strong>The Platinum Rule</strong> berperan: beradaptasi dengan mengatur <em>tempo</em> dan <em>fokus</em> demi menurunkan ketegangan (Tension) lawan bicara, agar solusi bisa dijalankan.</p>
+                </div>
+
+                <div class="bg-slate-800/60 rounded-xl p-5 border border-slate-700">
+                    <h3 class="font-bold text-cyan-400 mb-3 text-lg">⚙️ Protokol Permainan (Sequencing):</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3">
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-cyan-400">1</span>
+                            <span>Analisis skenario dan perhatikan <strong>Tension Meter</strong> rekan kerjamu.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-cyan-400">2</span>
+                            <span>Pikiranmu dipenuhi pecahan kalimat. <strong>Klik blok teks</strong> di bawah untuk menyusun kalimat respons.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="flex-shrink-0 w-6 h-6 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-cyan-400">3</span>
+                            <span><strong>Formula Emas:</strong> Empati/Validasi &rarr; Sesuaikan Tempo/Fokus &rarr; Beri Solusi Proaktif.</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
             
-            <div class="mt-16 text-[10px] opacity-40 font-bold tracking-widest uppercase text-center w-full">
-                Education & Training Dept. © 2026
+            <button id="btn-start" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-lg rounded-xl px-6 py-4 mt-8 flex justify-center items-center gap-2 shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all">
+                Mulai Shift Kerja
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </div>
+    </section>
+
+    <!-- SCREEN 3: CORE EXECUTION (GAMEPLAY) -->
+    <section id="screen-game" class="w-full max-w-4xl hidden-screen z-10 my-4 sm:my-8">
+        <!-- Top HUD -->
+        <div class="glass-panel p-4 mb-6 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex-1 min-w-[200px]">
+                <div class="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+                    <span>Progress: Shift <span id="ui-level" class="text-cyan-400 text-sm">1</span>/10</span>
+                    <span id="ui-percentage">10%</span>
+                </div>
+                <div class="w-full bg-slate-800 rounded-full h-2">
+                    <div id="ui-progress-bar" class="bg-gradient-to-r from-cyan-400 to-purple-500 h-2 rounded-full transition-all duration-500" style="width: 10%"></div>
+                </div>
+            </div>
+            <div class="text-right">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Reputation Score</p>
+                <p id="ui-score" class="text-2xl brand-font font-bold text-purple-400">0</p>
             </div>
         </div>
 
-        <!-- SCREEN 2: MISSION BRIEF -->
-        <div id="screen-mission" class="hidden flex flex-col items-center justify-center min-h-screen">
-            <div class="glass p-10 rounded-[40px] w-full max-w-md border-b-8 border-indigo-500">
-                <h2 class="text-4xl font-black mb-8 flex items-center tracking-tighter">
-                    <span class="mr-4 text-5xl">⚡</span> MISSION BRIEF
-                </h2>
-                
-                <div class="space-y-8 text-left opacity-90 leading-relaxed mb-10">
-                    <div class="flex items-start">
-                        <div class="bg-yellow-400 text-black w-8 h-8 rounded-full flex items-center justify-center font-black mr-4 shrink-0 text-xs">1</div>
-                        <p class="text-sm"><b>Goal:</b> Adaptasi tempo & fokus. Kamu harus memilih 1 dari 3 opsi jawaban <b>Courtesy Heads-Up</b> yang paling cocok dengan tipe lawan bicara.</p>
+        <div class="flex flex-col lg:flex-row gap-6">
+            <!-- NPC & Tension Area -->
+            <div class="lg:w-1/3 flex flex-col gap-4">
+                <div class="glass-panel p-6 flex flex-col items-center justify-center relative overflow-hidden h-full">
+                    <!-- Tension Meter Background -->
+                    <div class="absolute right-0 top-0 w-3 h-full bg-slate-800">
+                        <div id="tension-bar" class="absolute bottom-0 w-full bg-red-500 tension-bar" style="height: 90%;"></div>
                     </div>
-                    <div class="flex items-start">
-                        <div class="bg-indigo-500 w-8 h-8 rounded-full flex items-center justify-center font-black mr-4 shrink-0 text-white text-xs">2</div>
-                        <p class="text-sm"><b>Reflex Check:</b> Baca pernyataan agresif/pasif mereka di kartu, lalu pilih respon yang menunjukkan kamu "mengatur tempo" demi kenyamanan mereka.</p>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="bg-pink-500 w-8 h-8 rounded-full flex items-center justify-center font-black mr-4 shrink-0 text-white text-xs">3</div>
-                        <p class="text-sm"><b>Evaluation:</b> Jawaban yang paling sinkron (Platinum Match) akan memberikan skor maksimal.</p>
-                    </div>
+                    
+                    <div class="text-6xl mb-4" id="npc-avatar">😠</div>
+                    <h3 class="text-lg font-bold text-white text-center" id="npc-name">Rekan Lapangan</h3>
+                    <p class="text-xs text-slate-400 uppercase tracking-widest text-center mt-1">Status: <span id="npc-status" class="text-red-400 font-bold">High Tension</span></p>
+                </div>
+            </div>
+
+            <!-- Dialogue & Sequencing Area -->
+            <div class="lg:w-2/3 flex flex-col gap-4">
+                <!-- NPC Dialogue -->
+                <div class="glass-panel p-6 relative border-l-4 border-l-purple-500">
+                    <div class="absolute -left-2 top-6 w-4 h-4 transform rotate-45 bg-slate-800 border-l border-b border-glass-border"></div>
+                    <p id="npc-dialogue" class="text-lg text-slate-200 italic font-medium">"Ini data dari tim lapangan belum masuk semua! Kalau begini terus kita bisa telat submit ke klien!"</p>
                 </div>
 
-                <button onclick="startGame()" class="w-full bg-indigo-500 hover:bg-indigo-400 py-5 rounded-2xl font-black text-xl btn-genz text-white tracking-tight">START SIMULATION ➔</button>
+                <!-- Sequencing Playground -->
+                <div class="glass-panel p-6">
+                    <h4 class="text-sm font-bold text-cyan-400 uppercase mb-4 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                        Susun Respons Anda (Klik sesuai urutan)
+                    </h4>
+                    
+                    <!-- Constructed Answer Area -->
+                    <div id="answer-zone" class="min-h-[80px] p-4 bg-slate-900/50 rounded-xl border-2 border-dashed border-slate-600 mb-6 flex flex-wrap gap-2 items-start content-start transition-colors">
+                        <!-- Clicked words go here -->
+                        <span class="text-slate-500 text-sm italic w-full text-center mt-2 pointer-events-none" id="answer-placeholder">Area Penyusunan Kalimat...</span>
+                    </div>
+
+                    <!-- Word Pool Area -->
+                    <div id="word-pool" class="flex flex-wrap gap-3">
+                        <!-- Word blocks generated here -->
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="mt-8 flex gap-4">
+                        <button id="btn-reset" class="px-4 py-3 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-800 transition text-sm font-medium">Reset</button>
+                        <button id="btn-submit" class="flex-1 bg-cyan-600 text-white font-bold py-3 rounded-lg hover:bg-cyan-500 transition opacity-50 cursor-not-allowed" disabled>Kirim Respons</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCREEN 4: POST-ACTION DEBRIEF (RESULT) -->
+    <section id="screen-result" class="w-full max-w-4xl hidden-screen z-10 my-10 pb-20">
+        <div class="glass-panel p-8 text-center mb-8 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-cyan-900/20 to-transparent pointer-events-none"></div>
+            
+            <h2 class="text-4xl brand-font font-bold mb-2 text-white">Shift Selesai!</h2>
+            <p id="result-name" class="text-slate-300 mb-8"></p>
+            
+            <div class="flex flex-wrap justify-center gap-8 mb-8">
+                <div class="flex flex-col items-center">
+                    <div class="w-32 h-32 rounded-full border-4 border-cyan-500 flex items-center justify-center bg-slate-800 shadow-[0_0_20px_rgba(6,182,212,0.3)] mb-3">
+                        <span id="final-accuracy" class="text-4xl brand-font font-bold text-white">0%</span>
+                    </div>
+                    <span class="text-xs uppercase tracking-widest text-slate-400 font-bold">Akurasi Protokol</span>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="w-32 h-32 rounded-full border-4 border-purple-500 flex items-center justify-center bg-slate-800 shadow-[0_0_20px_rgba(139,92,246,0.3)] mb-3">
+                        <span id="final-score" class="text-4xl brand-font font-bold text-white">0</span>
+                    </div>
+                    <span class="text-xs uppercase tracking-widest text-slate-400 font-bold">Reputation Score</span>
+                </div>
+            </div>
+
+            <h3 id="reinforcement-msg" class="text-xl font-bold mb-6"></h3>
+            
+            <!-- Badges Display -->
+            <div class="border-t border-slate-700 pt-6">
+                <h4 class="text-sm uppercase tracking-widest text-slate-400 mb-4 font-bold">Lencana Diperoleh</h4>
+                <div id="badges-container" class="flex flex-wrap justify-center gap-4">
+                    <!-- Badges via JS -->
+                </div>
             </div>
         </div>
 
-        <!-- SCREEN 3: GAMEPLAY -->
-        <div id="screen-game" class="hidden min-h-screen">
-            <div class="flex justify-between items-end mb-8">
-                <div>
-                    <p id="playerNameDisplay" class="text-[10px] font-black text-yellow-400 uppercase tracking-widest mb-1"></p>
-                    <h3 class="text-2xl font-black italic uppercase">Level <span id="currentLevel">1</span>/5</h3>
-                </div>
-                <div class="text-right w-1/2">
-                    <div class="text-[10px] opacity-50 uppercase font-black tracking-widest mb-2">Platinum Score: <span id="gameScore">0</span></div>
-                    <div class="progress-bar">
-                        <div id="progressFill" class="progress-fill"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Visual Novel Story Box -->
-            <div class="glass p-5 rounded-3xl mb-6 border-l-8 border-pink-500">
-                <div class="flex items-center mb-2">
-                    <div class="w-2 h-2 rounded-full bg-pink-500 mr-2 animate-pulse"></div>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-pink-500">Dialogue Scenario</span>
-                </div>
-                <p id="story-box" class="text-sm font-medium leading-snug italic opacity-80">
-                    "Memasuki area kantor..."
-                </p>
-            </div>
-
-            <!-- Interactive Dialog Card -->
-            <div class="card-container mb-6">
-                <div id="cardInner" class="card-inner">
-                    <div class="card-front">
-                        <div class="mb-4 opacity-40">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z"/></svg>
-                        </div>
-                        <h4 class="text-[10px] font-black uppercase tracking-[0.3em] mb-2 text-pink-400 italic underline">The Confrontation</h4>
-                        <p id="scenarioText" class="text-xl font-black leading-tight italic">"Laporannya kok belum ada? Saya butuh angkanya sekarang!"</p>
-                    </div>
-                    <div class="card-back">
-                        <div id="styleBadge" class="bg-yellow-400 text-black px-4 py-1 rounded-full text-[10px] font-black mb-3 uppercase tracking-widest">DIRECTOR MATCH</div>
-                        <h4 class="text-[10px] font-black uppercase tracking-[0.3em] mb-2 text-emerald-400">Analysis</h4>
-                        <p id="feedbackText" class="text-sm font-bold leading-snug mb-4">Feedback message goes here.</p>
-                        <div class="text-left bg-black/30 p-4 rounded-2xl border border-white/10 w-full">
-                            <p class="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-1">💡 Adaptation Logic:</p>
-                            <p id="tipText" class="text-[11px] leading-relaxed opacity-80 italic">Logic goes here.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Choice Options -->
-            <div id="choiceContainer" class="space-y-3">
-                <!-- Options injected here -->
-            </div>
-
-            <div id="controls" class="hidden mt-8">
-                <button onclick="nextLevel()" class="w-full bg-white text-black py-5 rounded-2xl font-black text-xl btn-genz tracking-tight">NEXT PHASE ➔</button>
-            </div>
+        <h3 class="text-2xl brand-font font-bold text-white mb-6">Analisis Respons (Debrief):</h3>
+        <div id="feedback-list" class="space-y-4">
+            <!-- Feedback items via JS -->
         </div>
 
-        <!-- SCREEN 4: FINISH -->
-        <div id="screen-finish" class="hidden flex flex-col items-center justify-center min-h-screen text-center">
-            <div class="mb-10">
-                <div id="finalEmoji" class="text-8xl mb-6">💎</div>
-                <h2 class="text-5xl font-black mb-3 tracking-tighter uppercase">Mission Complete</h2>
-                <p class="opacity-70 max-w-xs mx-auto mb-2" id="congratsMsg"></p>
-                <p class="text-yellow-400 font-black text-2xl tracking-widest uppercase">Score: <span id="finalScore">0</span></p>
-            </div>
+        <button onclick="location.reload()" class="w-full mt-10 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-bold py-5 rounded-xl transition">
+            Kembali ke Menu Utama
+        </button>
+    </section>
 
-            <div class="glass p-10 rounded-[40px] w-full max-w-sm border-4 border-yellow-400 relative overflow-hidden">
-                <h3 class="text-2xl font-black mb-6 italic uppercase underline">Certification</h3>
-                <div class="space-y-4 text-left mb-8">
-                    <p class="text-xs font-bold leading-relaxed">
-                        Peserta atas nama <span id="certName" class="text-yellow-400"></span> (NIK: <span id="certNIK" class="text-yellow-400"></span>) telah menyelesaikan simulasi Adaptabilitas Platinum Rule dengan hasil yang terdokumentasi.
-                    </p>
-                </div>
-                <button onclick="location.reload()" class="w-full bg-indigo-500 text-white py-5 rounded-2xl font-black btn-genz tracking-tight uppercase">Restart</button>
-            </div>
+    <!-- UI Overlay: Feedback Modal for wrong/correct answer during gameplay -->
+    <div id="modal-feedback" class="fixed inset-0 bg-slate-900/90 z-50 flex items-center justify-center p-4 hidden-screen backdrop-blur-sm">
+        <div class="glass-panel p-8 max-w-md w-full text-center animate-fade transform">
+            <div id="modal-icon" class="text-6xl mb-4">✅</div>
+            <h3 id="modal-title" class="text-2xl font-bold mb-2">Tepat Sekali!</h3>
+            <p id="modal-desc" class="text-slate-300 text-sm mb-6 leading-relaxed">Penjelasan muncul disini.</p>
+            <button id="btn-next-scenario" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-lg transition">Lanjut ke Shift Berikutnya</button>
         </div>
-
     </div>
 
-    <script>
-        let currentUser = { name: "", nik: "" };
-        let currentIdx = 0;
-        let score = 0;
-        let isAnswered = false;
+    <!-- UI Toast for Badge -->
+    <div id="toast-badge" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-slate-800 border border-purple-500 rounded-full px-6 py-3 flex items-center gap-3 shadow-[0_0_15px_rgba(139,92,246,0.5)] transition-all duration-500 opacity-0 translate-y-10 z-50 pointer-events-none">
+        <span class="text-2xl">🏅</span>
+        <div>
+            <p class="text-[10px] text-slate-300 uppercase font-bold">Badge Unlocked</p>
+            <p id="toast-badge-name" class="font-bold text-purple-400 text-sm">Name</p>
+        </div>
+    </div>
 
-        const scenarios = [
+    <!-- Footer -->
+    <footer class="mt-auto pt-8 pb-4 text-center w-full relative z-0">
+        <p class="text-xs text-slate-500 font-medium tracking-wide">Education & Training Dept. &copy; 2026</p>
+    </footer>
+
+    <!-- GAME LOGIC JAVASCRIPT -->
+    <script>
+        /* ==========================================
+           1. AUDIO ENGINE (Web Audio API)
+           ========================================== */
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let bgmOsc = null;
+        let bgmGain = null;
+        let isAudioMuted = true; // Default to muted until user interacts
+
+        const AudioEngine = {
+            playTone: function(freq, type, duration, vol, delay = 0) {
+                if (isAudioMuted || audioCtx.state === 'suspended') return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime + delay);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + delay + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(audioCtx.currentTime + delay);
+                osc.stop(audioCtx.currentTime + delay + duration);
+            },
+            click: () => AudioEngine.playTone(800, 'sine', 0.05, 0.1),
+            select: () => AudioEngine.playTone(600, 'triangle', 0.1, 0.1),
+            deselect: () => AudioEngine.playTone(400, 'triangle', 0.1, 0.1),
+            correct: () => {
+                AudioEngine.playTone(440, 'sine', 0.2, 0.1); // A4
+                AudioEngine.playTone(554.37, 'sine', 0.2, 0.1, 0.1); // C#5
+                AudioEngine.playTone(659.25, 'sine', 0.4, 0.1, 0.2); // E5
+            },
+            wrong: () => {
+                AudioEngine.playTone(300, 'sawtooth', 0.3, 0.1);
+                AudioEngine.playTone(250, 'sawtooth', 0.4, 0.1, 0.15);
+            },
+            badge: () => {
+                AudioEngine.playTone(523.25, 'square', 0.1, 0.05);
+                AudioEngine.playTone(659.25, 'square', 0.1, 0.05, 0.1);
+                AudioEngine.playTone(783.99, 'square', 0.1, 0.05, 0.2);
+                AudioEngine.playTone(1046.50, 'square', 0.5, 0.05, 0.3);
+            },
+            startBGM: function() {
+                if (isAudioMuted || bgmOsc) return;
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                
+                // Simple repeating drone/pad for background
+                bgmOsc = audioCtx.createOscillator();
+                bgmGain = audioCtx.createGain();
+                
+                bgmOsc.type = 'triangle';
+                bgmOsc.frequency.setValueAtTime(110, audioCtx.currentTime); // A2
+                
+                // LFO for subtle pulsing
+                const lfo = audioCtx.createOscillator();
+                lfo.type = 'sine';
+                lfo.frequency.value = 0.2; // slow pulse
+                const lfoGain = audioCtx.createGain();
+                lfoGain.gain.value = 0.05;
+                lfo.connect(lfoGain);
+                lfoGain.connect(bgmGain.gain);
+                lfo.start();
+
+                bgmGain.gain.value = 0.02; // very low volume
+                bgmOsc.connect(bgmGain);
+                bgmGain.connect(audioCtx.destination);
+                bgmOsc.start();
+            },
+            toggleAudio: function() {
+                isAudioMuted = !isAudioMuted;
+                const iconOn = document.getElementById('icon-audio-on');
+                const iconOff = document.getElementById('icon-audio-off');
+                
+                if (isAudioMuted) {
+                    iconOn.classList.add('hidden');
+                    iconOff.classList.remove('hidden');
+                    if (bgmGain) bgmGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+                } else {
+                    iconOff.classList.add('hidden');
+                    iconOn.classList.remove('hidden');
+                    if (audioCtx.state === 'suspended') audioCtx.resume();
+                    if (!bgmOsc) this.startBGM();
+                    else bgmGain.gain.setTargetAtTime(0.02, audioCtx.currentTime, 0.1);
+                }
+            }
+        };
+
+        document.getElementById('btn-audio').addEventListener('click', () => AudioEngine.toggleAudio());
+
+        /* ==========================================
+           2. GAME DATA (10 Scenarios - Platinum Rule)
+           Structure: Validasi/Empati -> Penyesuaian Tempo/Fokus -> Tindakan Proaktif
+           ========================================== */
+        const gameScenarios = [
+            // EASY (3 Blocks)
             {
-                story: "Seorang Manager (Tipe Director) menghampiri mejamu dengan langkah cepat dan nada bicara tinggi. Dia ingin hasil instan.",
-                problem: "\"Saya ngga mau tahu prosesnya gimana, pokoknya kenapa angkanya bisa beda?! Harus beres sekarang!\"",
-                options: [
-                    { 
-                        text: "\"Sabar ya Pak, saya harus cek satu-satu datanya dari awal bulan biar akurat, nanti saya info kalau sudah beres.\"", 
-                        val: 0, 
-                        feedback: "Terlalu lambat! Tipe Director benci tempo lambat dan detail proses saat sedang urgensi." 
-                    },
-                    { 
-                        text: "\"Baik Pak, saya cek selisih angkanya SEKARANG. Izin update 5 menit lagi untuk angka koreksinya.\"", 
-                        val: 20, 
-                        feedback: "PLATINUM MATCH! Kamu mengatur tempo menjadi cepat dan langsung fokus pada Hasil (Task)." 
-                    },
-                    { 
-                        text: "\"Waduh Pak, kayaknya ada tim lain yang salah input deh, saya tanyakan ke mereka dulu ya.\"", 
-                        val: 5, 
-                        feedback: "Blaming! Tidak menyelesaikan masalah dan tidak memberikan Heads-Up yang menenangkan." 
-                    }
+                level: 1, type: "Agresif/Cepat", avatar: "😤", tension: 90,
+                dialogue: "Ini data dari tim lapangan belum masuk semua! Kalau begini terus kita telat submit ke klien!",
+                blocks: [
+                    { id: 1, text: "Saya paham situasinya mendesak" }, // Empati
+                    { id: 2, text: "mari kita olah data yang sudah ada dulu" }, // Tempo/Fokus
+                    { id: 3, text: "sambil saya push tim lapangan sekarang." } // Action
                 ],
-                style: "DIRECTOR MATCH (FAST/TASK)",
-                tip: "Lawan bicara butuh efisiensi. Samakan temponya yang cepat dan jangan berikan detail proses kecuali diminta."
+                correctOrder: [1, 2, 3],
+                feedbackCorrect: "Sempurna! Anda memvalidasi kepanikannya, mengatur fokus pada apa yang bisa dikerjakan, dan memberi tindakan solutif.",
+                feedbackWrong: "Susunan kurang tepat. The Platinum Rule mengajarkan: redakan emosi dulu (Empati), atur fokus (Tempo), baru berikan solusi (Tindakan)."
             },
             {
-                story: "Rekan kerja satu tim (Tipe Relater) terlihat lesu dan cemas. Dia bicara pelan tentang ketakutannya pada deadline.",
-                problem: "\"Aduh, saya takut banget kalau kita telat kirim data ini, nanti manajemen gimana ya responnya... Kita bisa kena tegur.\"",
-                options: [
-                    { 
-                        text: "\"Halah gitu aja takut, kerjain aja lah cepetan biar beres!\"", 
-                        val: 0, 
-                        feedback: "Terlalu agresif! Tipe Relater butuh kenyamanan emosional, bukan tekanan tambahan." 
-                    },
-                    { 
-                        text: "\"Izin info, saya sudah bereskan 70%. Kita kerjakan sisanya bareng ya, santai aja pasti keburu jam 4 nanti.\"", 
-                        val: 20, 
-                        feedback: "PLATINUM MATCH! Kamu menyesuaikan tempo menjadi tenang dan fokus pada Hubungan (People/Support)." 
-                    },
-                    { 
-                        text: "\"Laporannya sudah saya email ya, cek aja sendiri.\"", 
-                        val: 10, 
-                        feedback: "Terlalu dingin. Kamu fokus ke tugas tapi mengabaikan kebutuhan emosional rekanmu." 
-                    }
+                level: 2, type: "Pasif/Ragu", avatar: "🥺", tension: 60,
+                dialogue: "Aduh, aku bingung milih vendornya. Semuanya kelihatan mirip, takut salah pilih...",
+                blocks: [
+                    { id: 1, text: "Nggak usah khawatir," }, // Empati
+                    { id: 2, text: "kita pelajari bareng komparasinya pelan-pelan." }, // Tempo
+                    { id: 3, text: "Coba kita mulai dari harganya dulu ya." } // Action/Fokus
                 ],
-                style: "RELATER MATCH (SLOW/PEOPLE)",
-                tip: "Lawan bicara butuh dukungan. Turunkan tempo bicaramu dan berikan jaminan keamanan (Heads-Up bernada suportif)."
+                correctOrder: [1, 2, 3],
+                feedbackCorrect: "Tepat. Anda menurunkan tempo untuk mengurangi tekanannya, lalu memecah masalah jadi langkah kecil.",
+                feedbackWrong: "Jika lawan bicara pasif, jangan langsung menekan dengan solusi cepat. Validasi perasaannya dan pelankan tempo."
             },
             {
-                story: "Seorang Auditor (Tipe Thinker) bertanya dengan sangat detail dan nada bicara yang datar namun menuntut akurasi.",
-                problem: "\"Bisa jelaskan secara spesifik asal angka 2.5% ini? Saya butuh data pendukungnya sekarang sebelum audit ditutup.\"",
-                options: [
-                    { 
-                        text: "\"Pokoknya itu sudah benar Pak sesuai rumus, percaya aja sama saya.\"", 
-                        val: 0, 
-                        feedback: "No Evidence! Tipe Thinker tidak butuh kepercayaan, mereka butuh Data dan Logika." 
-                    },
-                    { 
-                        text: "\"Keren kan Pak angkanya? Berkat kerjasama tim marketing yang luar biasa tuh!\"", 
-                        val: 5, 
-                        feedback: "Salah fokus! Thinker tidak peduli dengan antusiasme sosial saat sedang mencari akurasi data." 
-                    },
-                    { 
-                        text: "\"Izin Pak, saya sedang siapkan file breakdown formulanya. Saya kirim via email dalam 15 menit agar Bapak bisa cek detailnya.\"", 
-                        val: 20, 
-                        feedback: "PLATINUM MATCH! Kamu memberikan Heads-Up yang fokus pada detail/akurasi (Task) dengan tempo terukur." 
-                    }
+                level: 3, type: "Agresif/Tugas", avatar: "🧐", tension: 85,
+                dialogue: "Laporan ini berantakan! Harus direvisi sebelum jam 3 sore ini untuk meeting Direksi!",
+                blocks: [
+                    { id: 1, text: "Baik, saya mengerti ini prioritas utama." }, // Empati/Tugas
+                    { id: 2, text: "Saya dan tim akan langsung fokus revisi," }, // Tempo
+                    { id: 3, text: "dan draft barunya ada di meja Bapak jam 2.30." } // Action
                 ],
-                style: "THINKER MATCH (SLOW/TASK)",
-                tip: "Fokus pada data. Berikan kepastian kapan detail data akan mereka terima."
+                correctOrder: [1, 2, 3],
+                feedbackCorrect: "Bagus! Menghadapi orang berfokus tugas tinggi, hindari bawa perasaan emosional. Langsung validasi tugas dan beri kepastian waktu (tempo cepat).",
+                feedbackWrong: "Orang dengan fokus tugas tinggi butuh kepastian dan tempo cepat. Jangan masukkan unsur perasaan pribadi."
+            },
+            // MEDIUM (4 Blocks)
+            {
+                level: 4, type: "Overwhelmed", avatar: "🤯", tension: 95,
+                dialogue: "Email masuk terus, WA klien nanya terus! Aku nggak bisa mikirin Project A sekarang, sumpah!",
+                blocks: [
+                    { id: 1, text: "Tarik napas dulu, aku lihat kamu lagi repot banget." },
+                    { id: 2, text: "Fokus aja balas email klien hari ini." },
+                    { id: 3, text: "Untuk Project A, biar aku yang handle update-nya," },
+                    { id: 4, text: "besok pagi baru kita diskusikan lagi." }
+                ],
+                correctOrder: [1, 2, 3, 4],
+                feedbackCorrect: "Luar biasa! Anda memvalidasi kelelahannya, menurunkan tempo secara drastis, mengambil alih beban sesaat, dan menunda diskusi.",
+                feedbackWrong: "Ingat, orang yang kewalahan (Overwhelmed) butuh temponya diperlambat, bukan didorong untuk berpikir lebih banyak."
             },
             {
-                story: "Kepala Marketing (Tipe Socializer) mampir ke mejamu dengan ceria, mengajak ngobrol panjang lebar di jam sibuk.",
-                problem: "\"Eh liat deh, post kita viral! Oiya, progres laporan campaign kemarin gimana? Aman kan? Harusnya sih aman ya!\"",
-                options: [
-                    { 
-                        text: "\"Wah gila emang viral banget sih! Izin info kak, biar makin mantap, saya selesaikan sisa inputnya sekarang ya biar bisa segera kita blast hasilnya!\"", 
-                        val: 20, 
-                        feedback: "PLATINUM MATCH! Kamu merespon antusiasmenya (People) tapi tetap menarik fokus ke progress laporan dengan cepat." 
-                    },
-                    { 
-                        text: "\"Jangan ajak ngobrol dulu Kak, saya lagi pusing ngerjain ini.\"", 
-                        val: 0, 
-                        feedback: "Terlalu kaku! Tipe Socializer akan merasa tertolak secara pribadi jika kamu terlalu dingin." 
-                    },
-                    { 
-                        text: "\"Laporannya masih diproses.\"", 
-                        val: 10, 
-                        feedback: "Terlalu datar. Kurang 'vibe' antusiasme yang dibutuhkan tipe Socializer." 
-                    }
+                level: 5, type: "Micromanager", avatar: "🕵️", tension: 80,
+                dialogue: "Saya butuh update progress dari tim kamu setiap jam. Event ini nggak boleh ada kesalahan sekecil apapun.",
+                blocks: [
+                    { id: 1, text: "Saya setuju bahwa kualitas event ini sangat krusial." },
+                    { id: 2, text: "Agar tim bisa tetap fokus bekerja tanpa terdistraksi," },
+                    { id: 3, text: "bagaimana kalau saya kirim rekap komprehensif" },
+                    { id: 4, text: "dua kali sehari, jam 12 siang dan 5 sore?" }
                 ],
-                style: "SOCIALIZER MATCH (FAST/PEOPLE)",
-                tip: "Berikan apresiasi dulu pada antusiasme mereka, lalu arahkan kembali ke Heads-Up pekerjaan dengan nada positif."
+                correctOrder: [1, 2, 3, 4],
+                feedbackCorrect: "Negosiasi cerdas. Anda memvalidasi fokusnya pada kualitas (zero mistake), tapi secara proaktif merenegosiasi tempo agar tim tetap produktif.",
+                feedbackWrong: "Jangan tolak mentah-mentah. Validasi dulu fokus detailnya, baru berikan alternatif tempo yang logis."
             },
             {
-                story: "Lagi-lagi Manager Director tadi datang, kali ini dia merubah prioritas secara mendadak saat kamu hampir selesai.",
-                problem: "\"Lupakan project tadi! Sekarang kita pindah fokus ke Project Z. Mulai kerjakan SEKARANG juga!\"",
-                options: [
-                    { 
-                        text: "\"Tapi Pak, ini sudah 90% loh, sayang banget kalau ditinggal gitu aja...\"", 
-                        val: 5, 
-                        feedback: "Resistensi. Director tidak suka didebat soal perubahan prioritas yang menurut mereka mendesak." 
-                    },
-                    { 
-                        text: "\"Siap Pak! Izin Heads-up, saya alihkan fokus ke Project Z detik ini. Project lama saya simpan dulu di folder pending.\"", 
-                        val: 20, 
-                        feedback: "PLATINUM MATCH! Kamu menunjukkan adaptabilitas instan pada perubahan tempo dan prioritas tugasnya." 
-                    },
-                    { 
-                        text: "\"Bentar ya Pak, saya tarik nafas dulu, kaget saya...\"", 
-                        val: 0, 
-                        feedback: "Terlalu lambat. Director tidak punya waktu untuk memproses perasaan kagetmu." 
-                    }
+                level: 6, type: "Pasif-Agresif", avatar: "🙄", tension: 70,
+                dialogue: "Ya terserah kamu aja lah. Kamu kan yang paling pintar dan tahu segalanya soal sistem ini.",
+                blocks: [
+                    { id: 1, text: "Saya menghargai pengalamanmu di project ini." },
+                    { id: 2, text: "Supaya hasilnya benar-benar maksimal," },
+                    { id: 3, text: "saya sangat butuh masukan dari sudut pandangmu." },
+                    { id: 4, text: "Bagian mana yang menurutmu harus kita revisi?" }
                 ],
-                style: "DIRECTOR MATCH (FAST/TASK)",
-                tip: "Tunjukkan 'Kesediaan' untuk berubah tempo sesuai kebutuhan mereka secara instan."
+                correctOrder: [1, 2, 3, 4],
+                feedbackCorrect: "Tindakan elegan. Alih-alih terpancing emosi sarkasnya, Anda memvalidasi nilainya, mengatur fokus ke arah kolaborasi, dan memintanya bertindak.",
+                feedbackWrong: "Jangan konfrontasi sarkasmenya. Tarik fokusnya kembali ke kolaborasi dengan menghargai keahliannya."
+            },
+            // HARD (5 Blocks)
+            {
+                level: 7, type: "Perfeksionis", avatar: "⏳", tension: 65,
+                dialogue: "Draft ini belum sempurna. Saya perlu riset lagi minimal seminggu supaya datanya benar-benar bulletproof.",
+                blocks: [
+                    { id: 1, text: "Ketelitian kamu memang selalu menghasilkan data yang solid." },
+                    { id: 2, text: "Tapi mengingat deadline bisnis kita lusa," },
+                    { id: 3, text: "mari kita presentasikan temuan utama ini sebagai fase pertama," },
+                    { id: 4, text: "lalu kita masukkan riset lanjutanmu" },
+                    { id: 5, text: "sebagai rencana fase kedua." }
+                ],
+                correctOrder: [1, 2, 3, 4, 5],
+                feedbackCorrect: "Brilian! Anda memvalidasi kebutuhannya akan detail, tapi menjaga tempo agar bisnis tidak terhambat dengan sistem 'fase'.",
+                feedbackWrong: "Perfeksionis butuh kualitas, bisnis butuh kecepatan. Susunan yang benar harus mewadahi keduanya melalui kompromi fase."
+            },
+            {
+                level: 8, type: "Vague/Mengeluh", avatar: "😵‍💫", tension: 75,
+                dialogue: "Aplikasi baru ini jelek banget sih! Nggak user friendly, ribet, pokoknya malah bikin kerjaan lambat!",
+                blocks: [
+                    { id: 1, text: "Kelihatannya perubahan sistem ini memang bikin frustrasi." },
+                    { id: 2, text: "Biar kita bisa cari jalan keluarnya," },
+                    { id: 3, text: "coba tunjukkan ke saya perlahan-lahan," },
+                    { id: 4, text: "di menu spesifik mana" },
+                    { id: 5, text: "kamu paling sering merasa stuck?" }
+                ],
+                correctOrder: [1, 2, 3, 4, 5],
+                feedbackCorrect: "Sangat adaptif. Anda memvalidasi keluhannya, menurunkan tempo (perlahan-lahan), dan menggeser fokus dari abstrak menjadi masalah yang spesifik.",
+                feedbackWrong: "Ubah keluhan abstrak jadi spesifik. Urutannya: Validasi rasa frustrasi -> Pelankan tempo -> Minta ditunjukkan masalah spesifik."
+            },
+            {
+                level: 9, type: "Defensif", avatar: "🛡️", tension: 90,
+                dialogue: "Bukan salah tim saya kalau barangnya kurang! Tim Gudang yang telat ngasih update inventory ke kita!",
+                blocks: [
+                    { id: 1, text: "Saya ngerti ini situasi yang bikin stres semua pihak." },
+                    { id: 2, text: "Saat ini kita tidak sedang mencari siapa yang salah," },
+                    { id: 3, text: "mari kita fokus penuhi pesanan klien dulu." },
+                    { id: 4, text: "Saya akan telepon Gudang sekarang" },
+                    { id: 5, text: "untuk cek sisa stok yang bisa ditarik." }
+                ],
+                correctOrder: [1, 2, 3, 4, 5],
+                feedbackCorrect: "Penanganan konflik yang baik. Anda meredam ketegangan emosionalnya, menghentikan aksi saling tuduh (fokus), dan memimpin aksi penyelesaian.",
+                feedbackWrong: "Saat orang defensif, hilangkan elemen 'menyalahkan'. Validasi -> Geser fokus ke Solusi -> Ambil tindakan."
+            },
+            {
+                level: 10, type: "Burnout", avatar: "🥀", tension: 85,
+                dialogue: "Aku capek. Tiap hari masalahnya ini terus. Kayaknya mending aku resign aja deh dari project ini.",
+                blocks: [
+                    { id: 1, text: "Aku dengar rasa lelahmu, dan wajar kamu merasa begitu." },
+                    { id: 2, text: "Tinggalkan dulu urusan project ini sore ini," },
+                    { id: 3, text: "istirahatlah sejenak dan reset pikiranmu." },
+                    { id: 4, text: "Besok pagi saat sudah lebih tenang," },
+                    { id: 5, text: "kita bahas pembagian ulang beban kerjanya." }
+                ],
+                correctOrder: [1, 2, 3, 4, 5],
+                feedbackCorrect: "Master Adaptor! Menghadapi burnout tingkat tinggi, Anda menghentikan tempo secara total (jeda), memvalidasi lelahnya, dan menjanjikan perbaikan sistemis di masa depan.",
+                feedbackWrong: "Orang burnout tidak butuh solusi saat itu juga. Urutannya: Validasi -> Hentikan tempo (istirahat) -> Janjikan perbaikan beban kerja nanti."
             }
         ];
 
-        function playSound(id) {
-            const sound = document.getElementById(id);
-            sound.currentTime = 0;
-            sound.play().catch(e => {});
+        /* ==========================================
+           3. STATE MANAGEMENT
+           ========================================== */
+        const state = {
+            name: "",
+            nik: "",
+            currentLevel: 0, // 0 to 9
+            score: 0,
+            selectedBlockIds: [],
+            badges: [],
+            history: [] // stores results for debrief
+        };
+
+        // DOM Elements
+        const screens = {
+            gateway: document.getElementById('screen-gateway'),
+            briefing: document.getElementById('screen-briefing'),
+            game: document.getElementById('screen-game'),
+            result: document.getElementById('screen-result')
+        };
+        
+        /* ==========================================
+           4. CORE FUNCTIONS
+           ========================================== */
+        
+        // Navigation
+        function showScreen(screenId) {
+            Object.values(screens).forEach(s => s.classList.add('hidden-screen'));
+            screens[screenId].classList.remove('hidden-screen');
+            window.scrollTo(0,0);
         }
 
-        function toMission() {
-            const name = document.getElementById('inputName').value;
-            const nik = document.getElementById('inputNIK').value;
-            if(!name || !nik) { alert("Isi Nama & NIK dulu ya!"); return; }
-            currentUser = { name, nik };
-            
-            // Interaction to enable audio
-            playSound('sfxClick');
-            const bgMusic = document.getElementById('bgMusic');
-            bgMusic.volume = 0.15; // Set volume slightly lower for better UX
-            bgMusic.play().catch(e => console.log("Audio play blocked by browser"));
-
-            document.getElementById('screen-login').classList.add('hidden');
-            document.getElementById('screen-mission').classList.remove('hidden');
+        // Randomize array
+        function shuffleArray(array) {
+            const newArr = [...array];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
         }
 
-        function startGame() {
-            playSound('sfxClick');
-            document.getElementById('screen-mission').classList.add('hidden');
-            document.getElementById('screen-game').classList.remove('hidden');
-            document.getElementById('playerNameDisplay').innerText = `Agent: ${currentUser.name} | ${currentUser.nik}`;
+        // Login Submit
+        document.getElementById('form-login').addEventListener('submit', (e) => {
+            e.preventDefault();
+            AudioEngine.click();
+            state.name = document.getElementById('input-name').value;
+            state.nik = document.getElementById('input-nik').value;
+            document.getElementById('display-name').textContent = state.name;
+            showScreen('briefing');
+        });
+
+        // Start Game
+        document.getElementById('btn-start').addEventListener('click', () => {
+            AudioEngine.click();
+            if(!isAudioMuted) AudioEngine.startBGM();
+            showScreen('game');
             loadScenario();
+        });
+
+        // Load Scenario
+        function loadScenario() {
+            const scenario = gameScenarios[state.currentLevel];
+            state.selectedBlockIds = [];
+            
+            // Update HUD
+            document.getElementById('ui-level').textContent = state.currentLevel + 1;
+            const progress = (state.currentLevel / 10) * 100;
+            document.getElementById('ui-percentage').textContent = `${progress}%`;
+            document.getElementById('ui-progress-bar').style.width = `${progress}%`;
+            document.getElementById('ui-score').textContent = state.score;
+
+            // Update NPC
+            document.getElementById('npc-avatar').textContent = scenario.avatar;
+            document.getElementById('npc-name').textContent = "Rekan: " + scenario.type;
+            document.getElementById('npc-dialogue').textContent = `"${scenario.dialogue}"`;
+            
+            // Set Tension Bar
+            const tBar = document.getElementById('tension-bar');
+            tBar.style.height = `${scenario.tension}%`;
+            tBar.style.backgroundColor = scenario.tension > 70 ? '#ef4444' : (scenario.tension > 40 ? '#f59e0b' : '#10b981');
+            document.getElementById('npc-status').textContent = scenario.tension > 70 ? 'High Tension' : 'Moderate Tension';
+            document.getElementById('npc-status').className = scenario.tension > 70 ? 'text-red-400 font-bold' : 'text-yellow-400 font-bold';
+
+            // Reset Zones
+            renderZones(scenario);
+            
+            document.getElementById('btn-submit').disabled = true;
+            document.getElementById('btn-submit').classList.add('opacity-50', 'cursor-not-allowed');
         }
 
-        function loadScenario() {
-            isAnswered = false;
-            const s = scenarios[currentIdx];
-            document.getElementById('currentLevel').innerText = currentIdx + 1;
-            document.getElementById('story-box').innerText = s.story;
-            document.getElementById('scenarioText').innerText = s.problem;
-            document.getElementById('cardInner').classList.remove('is-flipped');
-            document.getElementById('controls').classList.add('hidden');
+        // Render Word Pool & Answer Zone
+        function renderZones(scenario) {
+            const pool = document.getElementById('word-pool');
+            const answerZone = document.getElementById('answer-zone');
             
-            const container = document.getElementById('choiceContainer');
-            container.innerHTML = "";
-            s.options.forEach((opt, index) => {
-                const btn = document.createElement('button');
-                btn.className = "w-full text-left p-4 rounded-2xl btn-option text-sm font-bold flex items-center";
-                btn.innerHTML = `<span class="bg-white/10 w-6 h-6 rounded-full flex items-center justify-center mr-3 shrink-0">${index+1}</span> ${opt.text}`;
-                btn.onclick = () => selectOption(index);
-                container.appendChild(btn);
+            pool.innerHTML = '';
+            answerZone.innerHTML = '';
+
+            if (state.selectedBlockIds.length === 0) {
+                answerZone.innerHTML = `<span class="text-slate-500 text-sm italic w-full text-center mt-2 pointer-events-none" id="answer-placeholder">Area Penyusunan Kalimat...</span>`;
+            } else {
+                // Render selected blocks in answer zone
+                state.selectedBlockIds.forEach(id => {
+                    const blockData = scenario.blocks.find(b => b.id === id);
+                    const el = document.createElement('div');
+                    el.className = 'word-block answer-slot text-sm';
+                    el.textContent = blockData.text;
+                    el.onclick = () => { AudioEngine.deselect(); removeBlock(id); };
+                    answerZone.appendChild(el);
+                });
+            }
+
+            // Render pool blocks (shuffled initially, but here we just render based on original shuffle state)
+            // To keep shuffle consistent during selecting/deselecting, we shuffle once per level load
+            if(!scenario.shuffledBlocks) {
+                scenario.shuffledBlocks = shuffleArray(scenario.blocks);
+            }
+
+            scenario.shuffledBlocks.forEach(block => {
+                const isSelected = state.selectedBlockIds.includes(block.id);
+                const el = document.createElement('div');
+                el.className = `word-block text-sm ${isSelected ? 'selected' : ''}`;
+                el.textContent = block.text;
+                if (!isSelected) {
+                    el.onclick = () => { AudioEngine.select(); addBlock(block.id); };
+                }
+                pool.appendChild(el);
             });
 
-            const progress = (currentIdx / scenarios.length) * 100;
-            document.getElementById('progressFill').style.width = `${progress}%`;
+            // Check if all blocks used to enable submit
+            const btnSubmit = document.getElementById('btn-submit');
+            if(state.selectedBlockIds.length === scenario.blocks.length) {
+                btnSubmit.disabled = false;
+                btnSubmit.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                btnSubmit.disabled = true;
+                btnSubmit.classList.add('opacity-50', 'cursor-not-allowed');
+            }
         }
 
-        function selectOption(idx) {
-            if(isAnswered) return;
-            isAnswered = true;
-            const s = scenarios[currentIdx];
-            const opt = s.options[idx];
-            
-            score += opt.val;
-            document.getElementById('gameScore').innerText = score;
-            
-            // Feedback Update
-            document.getElementById('feedbackText').innerText = opt.feedback;
-            document.getElementById('tipText').innerText = s.tip;
-            document.getElementById('styleBadge').innerText = s.style;
-            document.getElementById('styleBadge').className = opt.val === 20 ? 
-                "bg-emerald-400 text-black px-4 py-1 rounded-full text-[10px] font-black mb-3 uppercase tracking-widest" : 
-                "bg-red-500 text-white px-4 py-1 rounded-full text-[10px] font-black mb-3 uppercase tracking-widest";
-
-            if(opt.val === 20) playSound('sfxSuccess');
-            else if(opt.val === 0) playSound('sfxWrong');
-            else playSound('sfxFlip');
-
-            document.getElementById('cardInner').classList.add('is-flipped');
-            document.getElementById('choiceContainer').classList.add('opacity-30', 'pointer-events-none');
-            
-            setTimeout(() => {
-                document.getElementById('controls').classList.remove('hidden');
-                document.getElementById('game-container').scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            }, 600);
+        function addBlock(id) {
+            state.selectedBlockIds.push(id);
+            renderZones(gameScenarios[state.currentLevel]);
         }
 
-        function nextLevel() {
-            currentIdx++;
-            document.getElementById('choiceContainer').classList.remove('opacity-30', 'pointer-events-none');
-            if(currentIdx < scenarios.length) {
+        function removeBlock(id) {
+            state.selectedBlockIds = state.selectedBlockIds.filter(blockId => blockId !== id);
+            renderZones(gameScenarios[state.currentLevel]);
+        }
+
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            AudioEngine.click();
+            state.selectedBlockIds = [];
+            renderZones(gameScenarios[state.currentLevel]);
+        });
+
+        // Submit Answer Logic
+        document.getElementById('btn-submit').addEventListener('click', () => {
+            const scenario = gameScenarios[state.currentLevel];
+            const isCorrect = JSON.stringify(state.selectedBlockIds) === JSON.stringify(scenario.correctOrder);
+            
+            // Construct string for history
+            const userAnswerText = state.selectedBlockIds.map(id => scenario.blocks.find(b => b.id === id).text).join(" ");
+            const correctAnswerText = scenario.correctOrder.map(id => scenario.blocks.find(b => b.id === id).text).join(" ");
+
+            // UI Changes based on result
+            const tBar = document.getElementById('tension-bar');
+            const npcStatus = document.getElementById('npc-status');
+            const avatar = document.getElementById('npc-avatar');
+
+            let pts = 0;
+
+            if (isCorrect) {
+                AudioEngine.correct();
+                pts = (scenario.level <= 3) ? 10 : ((scenario.level <= 6) ? 15 : 20); // Scale points
+                state.score += pts;
+                
+                tBar.style.height = '15%'; // Tension drop
+                tBar.style.backgroundColor = '#10b981';
+                npcStatus.textContent = 'Relaxed';
+                npcStatus.className = 'text-green-400 font-bold';
+                avatar.textContent = '😌';
+                
+                showModalFeedback(true, "Tension Resolved!", scenario.feedbackCorrect);
+            } else {
+                AudioEngine.wrong();
+                
+                tBar.style.height = '100%'; // Tension spike
+                tBar.style.backgroundColor = '#ef4444';
+                npcStatus.textContent = 'Critical Tension';
+                npcStatus.className = 'text-red-500 font-bold animate-shake inline-block';
+                
+                showModalFeedback(false, "Miskomunikasi!", scenario.feedbackWrong);
+            }
+
+            // Save history
+            state.history.push({
+                shift: state.currentLevel + 1,
+                scenarioText: scenario.dialogue,
+                userAnswer: userAnswerText,
+                correctAnswer: correctAnswerText,
+                isCorrect: isCorrect,
+                ptsEarned: pts,
+                feedback: isCorrect ? scenario.feedbackCorrect : scenario.feedbackWrong
+            });
+
+            checkBadges();
+        });
+
+        // Feedback Modal
+        const modal = document.getElementById('modal-feedback');
+        function showModalFeedback(isCorrect, title, desc) {
+            document.getElementById('modal-icon').textContent = isCorrect ? '✨' : '⚠️';
+            const titleEl = document.getElementById('modal-title');
+            titleEl.textContent = title;
+            titleEl.className = `text-3xl font-bold mb-2 ${isCorrect ? 'text-green-400' : 'text-red-400'}`;
+            document.getElementById('modal-desc').innerHTML = desc;
+            
+            modal.classList.remove('hidden-screen');
+        }
+
+        document.getElementById('btn-next-scenario').addEventListener('click', () => {
+            AudioEngine.click();
+            modal.classList.add('hidden-screen');
+            
+            state.currentLevel++;
+            if (state.currentLevel < gameScenarios.length) {
                 loadScenario();
             } else {
-                showFinish();
+                endGame();
+            }
+        });
+
+        // Badge System
+        function checkBadges() {
+            let newlyEarned = null;
+            
+            // Badge 1: First Correct
+            if (state.history.length === 1 && state.history[0].isCorrect && !state.badges.includes("The Pacifier")) {
+                newlyEarned = { name: "The Pacifier", icon: "🕊️" };
+            }
+            // Badge 2: 5 Correct in a row
+            if (state.history.length === 5 && state.score >= 50 && !state.badges.includes("Tempo Master")) {
+                newlyEarned = { name: "Tempo Master", icon: "⏱️" };
+            }
+            // Badge 3: Perfect Score (checked at end, but can trigger if logic dictates)
+
+            if (newlyEarned) {
+                state.badges.push(newlyEarned.name);
+                showBadgeToast(newlyEarned.name, newlyEarned.icon);
             }
         }
 
-        function showFinish() {
-            document.getElementById('progressFill').style.width = `100%`;
-            document.getElementById('screen-game').classList.add('hidden');
-            document.getElementById('screen-finish').classList.remove('hidden');
-            document.getElementById('finalScore').innerText = score;
-            document.getElementById('certName').innerText = currentUser.name;
-            document.getElementById('certNIK').innerText = currentUser.nik;
+        function showBadgeToast(name, icon) {
+            AudioEngine.badge();
+            const toast = document.getElementById('toast-badge');
+            document.getElementById('toast-badge-name').textContent = name;
+            // toast.querySelector('span').textContent = icon;
+            
+            toast.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+            }, 4000);
+        }
 
-            if(score >= 80) {
-                document.getElementById('finalEmoji').innerText = "💎";
-                document.getElementById('congratsMsg').innerText = "Luar biasa! Kamu adalah Master Adaptabilitas. Kamu sangat peka dalam mengatur tempo komunikasi.";
-            } else if(score >= 50) {
-                document.getElementById('finalEmoji').innerText = "🌟";
-                document.getElementById('congratsMsg').innerText = "Bagus! Kamu cukup adaptif, tapi masih perlu melatih refleks pada tipe kepribadian tertentu.";
+        // End Game & Debrief
+        function endGame() {
+            showScreen('result');
+            
+            // Calculate final stats
+            const totalScorePossible = (3 * 10) + (3 * 15) + (4 * 20); // 3 easy, 3 med, 4 hard
+            const correctCount = state.history.filter(h => h.isCorrect).length;
+            const accuracy = Math.round((correctCount / 10) * 100);
+            
+            document.getElementById('result-name').innerHTML = `Operation Resolver: <strong>${state.name}</strong> (${state.nik})`;
+            document.getElementById('final-accuracy').textContent = `${accuracy}%`;
+            document.getElementById('final-score').textContent = state.score;
+
+            // Reinforcement Message
+            const reMsg = document.getElementById('reinforcement-msg');
+            if (accuracy === 100) {
+                reMsg.textContent = "Luar Biasa! Anda adalah negosiator tingkat tinggi.";
+                reMsg.className = "text-xl font-bold text-green-400 mb-6";
+                if(!state.badges.includes("Platinum Resolver")) state.badges.push("Platinum Resolver");
+            } else if (accuracy >= 70) {
+                reMsg.textContent = "Kerja Bagus! Anda sudah bisa mengelola tensi dengan baik.";
+                reMsg.className = "text-xl font-bold text-cyan-400 mb-6";
             } else {
-                document.getElementById('finalEmoji').innerText = "💪";
-                document.getElementById('congratsMsg').innerText = "Semangat! Ingatlah untuk selalu mengatur 'gigi' komunikasi sesuai lawan bicaramu.";
+                reMsg.textContent = "Terus Berlatih! Adaptabilitas butuh waktu untuk menjadi refleks.";
+                reMsg.className = "text-xl font-bold text-yellow-400 mb-6";
             }
-            playSound('sfxSuccess');
+
+            // Render Badges
+            const badgeBox = document.getElementById('badges-container');
+            if (state.badges.length === 0) {
+                badgeBox.innerHTML = `<span class="text-slate-500 italic text-sm">Belum ada lencana yang terbuka.</span>`;
+            } else {
+                state.badges.forEach(b => {
+                    badgeBox.innerHTML += `
+                        <div class="bg-purple-900/40 border border-purple-500 rounded-lg px-4 py-2 flex items-center gap-2 shadow-[0_0_10px_rgba(139,92,246,0.2)]">
+                            <span class="text-purple-300 font-bold text-sm">${b}</span>
+                        </div>
+                    `;
+                });
+            }
+
+            // Render Feedback List
+            const feedList = document.getElementById('feedback-list');
+            state.history.forEach(item => {
+                const bgClass = item.isCorrect ? 'bg-green-900/20 border-green-700/50' : 'bg-red-900/20 border-red-700/50';
+                const textCol = item.isCorrect ? 'text-green-400' : 'text-red-400';
+                const icon = item.isCorrect ? '✓' : '✗';
+                
+                let answerDetail = `<p class="text-sm font-medium mb-2 ${textCol}">Respons Anda: "${item.userAnswer}"</p>`;
+                if (!item.isCorrect) {
+                    answerDetail += `<p class="text-sm font-medium text-green-400 mb-2">Seharusnya: "${item.correctAnswer}"</p>`;
+                }
+
+                feedList.innerHTML += `
+                    <div class="glass-panel p-5 border-l-4 ${item.isCorrect ? 'border-l-green-500' : 'border-l-red-500'} ${bgClass}">
+                        <div class="flex gap-4">
+                            <div class="w-8 h-8 rounded-full ${item.isCorrect ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'} flex items-center justify-center font-bold flex-shrink-0 mt-1">${icon}</div>
+                            <div>
+                                <p class="text-xs text-slate-400 font-bold mb-1 uppercase tracking-wider">Shift ${item.shift} <span class="text-purple-400 ml-2">+${item.ptsEarned} pts</span></p>
+                                <p class="text-slate-200 italic mb-3 text-sm">NPC: "${item.scenarioText}"</p>
+                                ${answerDetail}
+                                <div class="bg-slate-900/60 p-3 rounded-lg mt-3 border border-slate-700">
+                                    <span class="text-xs font-bold text-cyan-400 uppercase">Analisis Instruktur:</span>
+                                    <p class="text-sm text-slate-300 mt-1">${item.feedback}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
         }
     </script>
 </body>
